@@ -53,7 +53,7 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <x-table-header field="id" label="No" />
+                        <x-table-header field="id" label="No" :sortable="false" />
                         <x-table-header field="product_image" label="Gambar" :sortable="false" />
                         <x-table-header field="product_name" label="Nama Produk" />
                         <x-table-header field="price" label="Harga" />
@@ -66,13 +66,7 @@
                     @foreach ($products as $index => $product)
                     <tr>
                         <td>
-                            @php
-                                $direction = request('direction', 'desc');
-                                $no = $direction === 'asc'
-                                    ? $products->firstItem() + $index
-                                    : $products->total() - $products->firstItem() - $index + 1;
-                            @endphp
-                            {{ $no }}
+                            {{ $products->firstItem() + $index }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex-shrink-0 h-16 w-16">
