@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,3 +18,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    // Export route
+    Route::get('/products/export', [ProductExportController::class, 'export'])->name('products.export');
+    // Product management routes
+    Route::resource('products', ProductController::class);
+});
