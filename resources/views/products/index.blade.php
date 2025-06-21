@@ -39,19 +39,27 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Produk</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <x-table-header field="id" label="No" />
+                        <x-table-header field="product_image" label="Gambar" :sortable="false" />
+                        <x-table-header field="product_name" label="Nama Produk" />
+                        <x-table-header field="price" label="Harga" />
+                        <x-table-header field="stock" label="Stok" />
+                        <x-table-header field="status" label="Status" />
+                        <x-table-header field="aksi" label="Aksi" :sortable="false" />
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($products as $index => $product)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $products->firstItem() + $index }}</td>
+                        <td>
+                            @php
+                                $direction = request('direction', 'desc');
+                                $no = $direction === 'asc'
+                                    ? $products->firstItem() + $index
+                                    : $products->total() - $products->firstItem() - $index + 1;
+                            @endphp
+                            {{ $no }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex-shrink-0 h-16 w-16">
                                 @if($product->product_image && file_exists(public_path('storage/' . $product->product_image)))

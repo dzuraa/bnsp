@@ -14,6 +14,7 @@ class ProductController extends Controller
     {
         $query = Product::query();
 
+        // Search filter
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -22,9 +23,22 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->latest()->paginate(3)->withQueryString();
+        // Sorting
+        $sort = $request->get('sort', 'created_at'); // default: created_at
+        $direction = $request->get('direction', 'desc'); // default: descending
 
-        return view('products.index', compact('products'));
+        // Validate sort and direction
+        $allowedSorts = ['id', 'product_name', 'description', 'created_at', 'updated_at', 'price', 'stock']; // tambahkan kolom sesuai tabel
+        $allowedDirections = ['asc', 'desc'];
+
+        if (in_array($sort, $allowedSorts) && in_array($direction, $allowedDirections)) {
+            $query->orderBy($sort, $direction);
+        }
+
+        // Paginate
+        $products = $query->paginate(3)->withQueryString();
+
+        return view('products.index', compact('products', 'sort', 'direction'));
     }
 
     /**
